@@ -1,0 +1,33 @@
+{#login/templates/login/login.html#}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LOG IN</title>
+</head>
+<body>
+     <div style="margin: 15% 40%;">
+        <h1>Welcome login</h1>
+       <form action="/login/" method="post">
+	  {% if message %}
+                    <div class="alert alert-warning">{{ message }}</div>
+          {% endif %}
+	 {% csrf_token %}
+         <p>
+                <label for="email">Email: </label>
+                <input type="text" id="user_email" name="email" placeholder="email" autofocus required />
+            </p>
+          
+            <p>
+                <label for="id_password">Password: </label>
+                <input type="password" id="id_password" placeholder="Password" name="password" required >
+            </p>
+            <input type="submit" value="LOG IN">
+        </form>
+    </div>
+
+
+
+</body>
+</html>

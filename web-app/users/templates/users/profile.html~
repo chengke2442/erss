@@ -1,0 +1,44 @@
+{% extends "users/base.html" %}
+{% block content %}
+<h1>{{users.first_name}}</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Password</td>
+      <td>{{users.password}}</td>
+    </tr>
+    <tr>
+
+     <td>Email Address</td>
+      <td>{{users.email}}</td>
+    </tr>
+    <tr>
+      <td>Phone Number</td>
+      <td>{{users.phone_number}}</td>
+    </tr>
+	<tr>
+      <td>Phone Number</td>
+      <td>{{users.phone_number}}</td>
+    </tr>
+	<tr>
+      <td>Vehicle Type</td>
+      <td>{{cars.vehicle_type}}</td>
+    </tr>
+     <tr>
+      <td>Plate Number</td>
+      <td>{{cars.plate_number}}</td>
+    </tr>
+	<tr>
+      <td>Max Passangers</td>
+      <td>{{cars.max_passanger}}</td>
+    </tr>
+  </tbody>
+</table>
+     
+{% endblock%}

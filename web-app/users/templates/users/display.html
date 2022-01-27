@@ -1,0 +1,23 @@
+{% extends "users/base.html" %}
+{% block content %}
+
+<h1> This is a display page</h1>
+<div>
+    <table>
+      <tr>
+        <th>Destination</th>
+        <th>Date/time</th>
+	<th>Other</th>
+      </tr>
+      {% for request in requests %}
+      <tr>
+	<td>{{request.destination}}</td>
+	<td>{{request.arrivaltime}}</td>
+	<td> <a href="#">More Info</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  
+</div>
+
+{% endblock content %} 

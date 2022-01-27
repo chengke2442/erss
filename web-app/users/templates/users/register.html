@@ -1,0 +1,67 @@
+{% extends "users/base.html" %}
+{% block content %}
+<div class = "content-section">
+  <form class='form-register' action = "/register/"  method = "POST">
+    {% if message %}
+      <div class = "alert alert-warning">{{message}}</div>
+    {% endif %}
+    {% csrf_token %}
+    <h2 class="text-center">Welcome to register</h2>
+              <div class="form-group">
+                  {{ form.first_name.label_tag }}
+                  {{ form.first_name}}
+              </div>
+              <div class="form-group">
+                  {{ form.last_name.label_tag }}
+                  {{ form.last_name}}
+              </div>			  
+              <div class="form-group">
+                  {{ form.password1.label_tag }}
+                  {{ form.password1 }}
+              </div>
+              <div class="form-group">
+                  {{ form.password2.label_tag }}
+                  {{ form.password2 }}
+              </div>
+              <div class="form-group">
+                  {{ form.email.label_tag }}
+                  {{ form.email }}
+              </div>
+              <div class="form-group">
+                  {{ form.phone_number.label_tag }}
+                  {{ form.phone_number }}
+              </div>
+              <div class="form-group">
+                  {{ form.status_flag.label_tag }}
+                  {{ form.status_flag }}
+              </div>
+	      <div class="form-group">
+                  {{ form.vehicle_id.label_tag }}
+                  {{ form.vehicle_id }}
+              </div>
+              <div class="form-group">
+                  {{ car.vehicle_type.label_tag }}
+                  {{ car.vehicle_type }}
+              </div>
+              <div class="form-group">
+                  {{ car.plate_number.label_tag }}
+                  {{ car.plate_number }}
+              </div>
+	      <div class="form-group">
+                  {{ car.max_passanger.label_tag }}
+                  {{ car.max_passanger }}
+              </div>
+                   
+
+              <button type="submit" class="btn btn-primary pull-right">Submit</button>
+
+    
+  </form>
+  <div class = "border-top pt-3">
+    <small class="text-muted">
+       Already have an account? <a class="ml-2" href="#">Sign in</a>
+      </small>
+  </div>
+  
+ </div>
+{% endblock content %}

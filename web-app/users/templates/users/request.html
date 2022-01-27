@@ -1,0 +1,33 @@
+{% extends "users/base.html" %}
+{% block content %}
+<div class="content-section">
+  <form class = 'form-request' action="/request/" method="POST">
+    {% if request.session.is_login %}
+    {% csrf_token %}
+    <h1> This is request page</h1>
+    <div class="form-group">
+      {{ request_form.destination.label_tag}}
+      {{ request_form.destination}}
+    </div>
+
+    <div class="form-group">
+      {{ request_form.arrivalTime.label_tag}}
+      {{ request_form.arrivalTime}}
+    </div>
+
+    <div class="form-group">
+      {{ request_form.NumPassanger.label_tag}}
+      {{ request_form.NumPassanger}}
+    </div>
+
+    <div class="form-group">
+      {{ request_form.CanShare.label_tag }}
+      {{ request_form.CanShare }}
+    </div>
+      <button type="submit">Submit</button>
+     {% else %}
+     <h1>Please log in first</h1><a href = "/login/">log in</a>
+    {% endif %}
+  </form>
+ </div>
+ {% endblock content %}
