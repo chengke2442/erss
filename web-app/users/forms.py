@@ -40,3 +40,8 @@ class RideForm(forms.Form):
     class Meta:
         model = Ride
 
+class LoginForm(forms.Form):
+    email = forms.EmailField(label="Email",widget=forms.EmailInput(attrs={'class':'form-control'}))
+    password = forms.CharField(label = "Password",max_length = 256,widget = forms.PasswordInput())
+    class Meta:
+        model = haha
