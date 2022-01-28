@@ -36,7 +36,7 @@ def register(request):
                 new_user.phone_number = form.cleaned_data.get('phone_number')
                 new_user.save()
                 new_car = car.objects.create()
-                new_car.driver_id = new_user
+                new_car.driver_id = form.cleaned_data.get('email')
                 new_car.vehicle_type =  form2.cleaned_data.get('vehicle_type')
                 new_car.plate_number =  form2.cleaned_data.get('plate_number')
                                                               
@@ -49,6 +49,8 @@ def register(request):
     return render(request,'users/register.html',{'form':form,'car':form2})
 
 def login(request):
+#    if request.session.get('is_login',None):
+#        return redirect('/login')    
 #    if request.session.get('is_login',None):
 #        return redirect('/login')
     
@@ -71,14 +73,13 @@ def login(request):
                      message = "Incorrect password"
             except:
                 message = "User dose not exist"
-        return render(request, 'users/login.html', {"message": message}, {'login_form':login_form})
+        
+        return render(request, 'users/login.html', context={"message": message, 'login_form':login_form})
     else:
         login_form = LoginForm()
     return render(request,'users/login.html', {'login_form':login_form})
 
-
-def request(request):
-    
+def request(request):    
     # display pages to request a ride
     if request.method =="POST":
         request_form = RideForm(request.POST)
@@ -102,7 +103,7 @@ def request(request):
             # add to relation table
             new_relation = Relation()
             new_relation.r_request_id = new_request
-            new_relation.r_owner_id = request.session.get('user_id')
+            new_relation.r_owner_email = request.session.get('user_email')
             new_relation.save()
             
             return redirect('/request/')
@@ -133,3 +134,17 @@ def profile(request):
     cars = car.objects.filter(driver_id = users)
  
     return render(request,'users/profile.html',{'users':users,'cars':cars})
+
+def rideDetail(request, request_id):
+    response = "You're looking at the details of ride %s."
+#    return HttpResponse(response % request_id)
+    request_res = Ride.objects.get(pk=request_id)
+    print(request_res)
+    relation = Relation.objects.get(r_request_id=request_id)
+    print(relation)
+    driver_email = relation.r_driver_email;
+    print(driver_email)
+    driver = User.objects.get(email=driver_email)
+    print(driver.email)
+    vehilce = car.objects.get(driver_email=driver_email)
+    return render(request, 'users/rideDetail.html', {'request_id':request_res, 'driver':driver, 'vehilce':car})
