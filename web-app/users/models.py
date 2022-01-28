@@ -44,13 +44,14 @@ class Ride(models.Model):
         NumPassanger = models.IntegerField();
         CanShare = models.IntegerField();
         owner_id = models.IntegerField(null=True);
-        #        owner_id = models.ForeignKey('haha', on_delete=models.CASCADE);
+        #    owner_id = models.ForeignKey('haha', on_delete=models.CASCADE);
         max_passanger = models.IntegerField(null=True);
         status = models.IntegerField(default=0);
         owner_email = models.EmailField(null=True);
 
 class Relation(models.Model):
         r_request_id = models.ForeignKey('Ride', on_delete=models.CASCADE);
-        r_driver_id = models.ForeignKey('haha',related_name='%(class)s_user_dirver', on_delete=models.CASCADE);
-        r_owner_id = models.ForeignKey('haha', related_name='%(class)s_user_owner', on_delete=models.CASCADE);
-        r_sharer_id = models.ForeignKey('haha', related_name='%(class)s_user_sharer', on_delete=models.CASCADE);
+        r_driver_id = models.ForeignKey('haha',related_name='%(class)s_user_dirver', on_delete=models.CASCADE, null=True);
+#        r_owner_id = models.ForeignKey('haha', related_name='%(class)s_user_owner', on_delete=models.CASCADE);
+        r_owner_id = models.IntegerField(); 
+        r_sharer_id = models.ForeignKey('haha', related_name='%(class)s_user_sharer', on_delete=models.CASCADE, null=True);
