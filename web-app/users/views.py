@@ -124,7 +124,22 @@ def logout(request):
         return redirect("/login/")
     request.session.flush()
     return redirect("/login/")
-
+	
+def addDriver(request):
+    form2 = CarForm(request.POST)
+    if form2.is_valid():
+                h = request.session.get('user_id',None) 
+                new_user = haha.objects.filter(id = h).first()
+                new_user.status_flag = 1
+                new_user.save()
+                new_car = car.objects.create()
+                new_car.driver_id = new_user
+                new_car.vehicle_type =  form2.cleaned_data.get('vehicle_type')
+                new_car.plate_number =  form2.cleaned_data.get('plate_number')
+                                                              
+                new_car.max_passanger =  form2.cleaned_data.get('max_passanger')
+                new_car.save()
+    return render(request,'users/newDriver.html',{'car':form2})
 
 def profile(request):
     if not request.session.get('is_login',None):

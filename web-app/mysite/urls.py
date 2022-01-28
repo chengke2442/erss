@@ -25,6 +25,7 @@ urlpatterns = [
     path('display/',user_views.display_my_rides,name = 'rides-display'),
     path('profile/',user_views.profile,name='profile'),
     path('logout/',user_views.logout,name='rides-logout'),
-    path('register/', user_views.register, name = 'register'),
     path('ride/', include('users.urls')),
+    path('addCar/',user_views.addDriver,name = 'add'),
+    path('register/', user_views.register, name = 'register'),
 ]
