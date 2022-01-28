@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
-from .forms import UserForm,CarForm,RideForm
+from .forms import UserForm,CarForm,RideForm,LoginForm
 from .models import haha,Ride
 from .models import car
 from django.http import HttpResponse
@@ -42,21 +42,23 @@ def register(request):
                                                               
                 new_car.max_passanger =  form2.cleaned_data.get('max_passanger')
                 new_car.save()
-            return redirect('/blog/')
+            return redirect('/login/')
     else:
         form = UserForm()
         form2 = CarForm()
     return render(request,'users/register.html',{'form':form,'car':form2})
 
 def login(request):
-    if request.session.get('is_login',None):
-        return redirect('/login')
+#    if request.session.get('is_login',None):
+#        return redirect('/login')
     
     if request.method == "POST":
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        message = "Please enter correct information"
-        if email and password:
+        login_form = LoginForm(request.POST)
+        message = "Please check what you have entered"
+        if login_form.is_valid():
+            email = login_form.cleaned_data['email']
+            password = login_form.cleaned_data['password']
+            message = "Please enter correct information"
 #           email = email.strip();
             try:
                  user = haha.objects.get(email=email)
@@ -69,8 +71,10 @@ def login(request):
                      message = "Incorrect password"
             except:
                 message = "User dose not exist"
-        return render(request, 'users/login.html', {"message": message})
-    return render(request,'users/login.html')
+        return render(request, 'users/login.html', {"message": message}, {'login_form':login_form})
+    else:
+        login_form = LoginForm()
+    return render(request,'users/login.html', {'login_form':login_form})
 
 
 def request(request):
@@ -84,15 +88,15 @@ def request(request):
             num = request_form.cleaned_data.get('NumPassanger')
             share = request_form.cleaned_data.get('CanShare')
 #            new_request = Ride.objects.create(destination, arrivalTime, num, share)
-            new_request = Ride.objects.create();
-           
+            #new_request = Ride.objects.create();
+            new_request = Ride();            
             new_request.destination = destination
             new_request.arrivalTime = arrivalTime
-            new_request.NumPassanger = num
-           
+            new_request.NumPassanger = num           
             new_request.CanShare = share
-#            new_request.ownerEmail = request.session.get('user_email')
+            new_request.owner_email = request.session.get('user_email')
             new_request.status = 0
+            new_request.owner_id = request.session.get('user_id')
             new_request.save()
             return redirect('/request/')
             #return render(request,'rides/main.html')
