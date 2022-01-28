@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from .forms import UserForm,CarForm,RideForm,LoginForm
-from .models import haha,Ride
+from .models import haha,Ride, Relation
 from .models import car
 from django.http import HttpResponse
 from django.contrib.auth.models import User
@@ -89,7 +89,7 @@ def request(request):
             share = request_form.cleaned_data.get('CanShare')
 #            new_request = Ride.objects.create(destination, arrivalTime, num, share)
             #new_request = Ride.objects.create();
-            new_request = Ride();            
+            new_request = Ride()            
             new_request.destination = destination
             new_request.arrivalTime = arrivalTime
             new_request.NumPassanger = num           
@@ -98,6 +98,13 @@ def request(request):
             new_request.status = 0
             new_request.owner_id = request.session.get('user_id')
             new_request.save()
+
+            # add to relation table
+            new_relation = Relation()
+            new_relation.r_request_id = new_request
+            new_relation.r_owner_id = request.session.get('user_id')
+            new_relation.save()
+            
             return redirect('/request/')
             #return render(request,'rides/main.html')
     form = RideForm()
@@ -105,7 +112,7 @@ def request(request):
 
 
 def display_my_rides(request):
-    requests = Ride.objects.all()
+    requests = Ride.objects.filter(owner_id=request.session.get('user_id'))
     print(requests)
     context = {"requests":requests}
     return render(request, "users/display.html", context=context)
