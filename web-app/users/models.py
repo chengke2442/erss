@@ -21,8 +21,8 @@ class haha(models.Model):
 # Create your models here.
 
 class car(models.Model):
-
-    driver_id = models.ForeignKey('haha',on_delete=models.CASCADE,blank=True,null=True)
+    driver_id = models.EmailField(null=True);
+#    driver_id = models.ForeignKey('haha',on_delete=models.CASCADE, null=True)
     vehicle_type = models.CharField(default="Sedan",max_length=10)
     plate_number = models.CharField(max_length=10, default="test")
     max_passanger = models.CharField(default="4",max_length=1)
@@ -51,7 +51,9 @@ class Ride(models.Model):
 
 class Relation(models.Model):
         r_request_id = models.ForeignKey('Ride', on_delete=models.CASCADE);
-        r_driver_id = models.ForeignKey('haha',related_name='%(class)s_user_dirver', on_delete=models.CASCADE, null=True);
+#        r_driver_id = models.ForeignKey('haha',related_name='%(class)s_user_dirver', on_delete=models.CASCADE, null=True);
 #        r_owner_id = models.ForeignKey('haha', related_name='%(class)s_user_owner', on_delete=models.CASCADE);
-        r_owner_id = models.IntegerField(); 
-        r_sharer_id = models.ForeignKey('haha', related_name='%(class)s_user_sharer', on_delete=models.CASCADE, null=True);
+        r_owner_email = models.EmailField(null=True); 
+        #r_sharer_email = models.ForeignKey('haha', related_name='%(class)s_user_sharer', on_delete=models.CASCADE, null=True);
+        r_driver_email = models.EmailField(null=True);
+        r_sharer_email = models.EmailField(null=True);
