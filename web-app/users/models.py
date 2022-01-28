@@ -11,7 +11,7 @@ class haha(models.Model):
         # add some text
         phone_number = models.CharField(max_length = 100);
         status_flag = models.CharField(max_length = 1);
-        vehicle_id = models.CharField(max_length = 10,unique=True);
+        vehicle_id = models.CharField(max_length = 10,unique=True, null=True);
 
         def  __str__(self):
                 return self.last_name
@@ -43,10 +43,11 @@ class Ride(models.Model):
         arrivaltime = models.DateTimeField(default = timezone.now());
         NumPassanger = models.IntegerField();
         CanShare = models.IntegerField();
-        owner_id = models.ForeignKey('haha', on_delete=models.CASCADE);
+        owner_id = models.IntegerField(null=True);
+        #        owner_id = models.ForeignKey('haha', on_delete=models.CASCADE);
         max_passanger = models.IntegerField(null=True);
         status = models.IntegerField(default=0);
-        owner_email = models.EmailField(null=True, unique=True);
+        owner_email = models.EmailField(null=True);
 
 class Relation(models.Model):
         r_request_id = models.ForeignKey('Ride', on_delete=models.CASCADE);
