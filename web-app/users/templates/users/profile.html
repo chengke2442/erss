@@ -22,6 +22,7 @@
       <td>Phone Number</td>
       <td>{{users.phone_number}}</td>
     </tr>
+    {% if users.status_flag %}
 	<tr>
       <td>Vehicle Type</td>
       <td>{{cars.vehicle_type}}</td>
@@ -33,8 +34,13 @@
 	<tr>
       <td>Max Passangers</td>
       <td>{{cars.max_passanger}}</td>
-    </tr>
+	</tr>
+    	
   </tbody>
 </table>
-     
+{% else %}
+</table>
+ <a href = "/addCar/">Want to be a driver </a>
+
+   {% endif %}  
 {% endblock%}
