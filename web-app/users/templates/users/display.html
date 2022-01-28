@@ -13,7 +13,7 @@
       <tr>
 	<td>{{request.destination}}</td>
 	<td>{{request.arrivaltime}}</td>
-	<td> <a href="#">More Info</a></td>
+	<td> <a href="{% url 'rideDetail' request.id %}">More Info</a></td>
       </tr>
       {% endfor %}
     </table>

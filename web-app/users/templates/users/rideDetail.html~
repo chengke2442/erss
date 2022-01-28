@@ -1,0 +1,46 @@
+{% extends "users/base.html" %}
+{% block content %}
+<h1> Ride {{request_id.id}} Basic Info</h1>
+<div>
+    <table>
+      <tr>
+        <th>Destination</th>
+        <th>Date/time</th>
+	<th># of passangers</th>
+	<th>Can share?</th>
+	<th>status</th>
+      </tr>
+      <tr>
+	<td>{{request_id.destination}}</td>
+	<td>{{request_id.arrivaltime}}</td>
+	<td>{{request_id.NumPassanger}}</td>
+	<td>{{request_id.CanShare}}</td>
+	<td>{{request_id.status}}</td>
+      </tr>
+    </table>
+  
+</div>
+<h1> Ride {{request_id.id}} Vehicle Info</h1>  
+<div>
+    <table>
+      <tr>
+        <th>Vehicle Driver</th>
+        <th>Vehicle Plate</th>
+	<th>Vehicle Type</th>
+      </tr>
+      <tr>
+	<td>{{driver.first_name}}</td>
+	<td>{{car.plate_number}}</td>
+	<td>{{car.vehicle_type}}</td>
+      </tr>
+    </table>
+  
+</div>
+
+
+
+
+
+
+
+{% endblock content %}  

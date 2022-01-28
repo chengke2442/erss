@@ -13,8 +13,8 @@ class haha(models.Model):
         status_flag = models.CharField(max_length = 1);
         vehicle_id = models.CharField(max_length = 10,unique=True, null=True);
 
-        def  __str__(self):
-                return self.last_name
+#        def  __str__(self):
+#                return self.last_name
        
                            
                

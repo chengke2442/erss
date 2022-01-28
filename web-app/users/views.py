@@ -106,17 +106,18 @@ def request(request):
             new_relation.r_owner_email = request.session.get('user_email')
             new_relation.save()
             
-            return redirect('/request/')
+            return redirect('/display/')
             #return render(request,'rides/main.html')
     form = RideForm()
     return render(request, 'users/request.html', {'request_form':form})
 
 
 def display_my_rides(request):
-    requests = Ride.objects.filter(owner_id=request.session.get('user_id'))
-    print(requests)
-    context = {"requests":requests}
-    return render(request, "users/display.html", context=context)
+#    return HttpResponse("a display pagexxxxxx")
+     requests = Ride.objects.filter(owner_email=request.session.get('user_email'))
+     print(requests)
+     context = {'requests':requests}
+     return render(request, "users/display.html", context=context)
 
 def logout(request):
     if not request.session.get('is_login',None):
@@ -144,7 +145,9 @@ def rideDetail(request, request_id):
     print(relation)
     driver_email = relation.r_driver_email;
     print(driver_email)
-    driver = User.objects.get(email=driver_email)
+    driver = haha.objects.get(email=driver_email)
     print(driver.email)
-    vehilce = car.objects.get(driver_email=driver_email)
-    return render(request, 'users/rideDetail.html', {'request_id':request_res, 'driver':driver, 'vehilce':car})
+    vehilce = car.objects.get(driver_id=driver_email)
+    print(vehilce.plate_number)
+    return render(request, 'users/rideDetail.html', {'request_id':request_res, 'driver':driver, 'car':vehilce})
+ #   return HttpResponse(response % request_id)
