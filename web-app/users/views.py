@@ -5,9 +5,21 @@ from .models import haha,Ride,Relation
 from .models import car
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 
 # Create your views here.
-def driver(request):
+def driver1(request,id1):
+    kk= Ride.objects.get(pk = id1)
+    kk.status = 1
+    kk.save()
+    print(kk)
+    rela = Relation.objects.get(r_request_id = kk)
+    rela.r_driver_email = request.session.get('user_email')
+    rela.save()
+    
+    send_mail('Confirmed Email','xxxxx','kkhw568@gmail',['rrrrjin24@gmail'],fail_silently=False)
+       
+       
     email = request.session.get('user_email')
     driverList = haha.objects.filter(email=email)
     driver = driverList.first()
@@ -18,12 +30,37 @@ def driver(request):
         passen = hercar.max_passanger
         print(passen)
         flag = 0
-        orderList=Ride.objects.filter(NumPassanger__lte=passen)
+        orderList=Ride.objects.filter(NumPassanger__lte=passen,status=0)
+        
     else:
         orderList = NULL
-        flag=1 
+        flag=1
+
+         
     return render(request,'users/driver.html',{'isDriver':flag,'orderList':orderList})   
-    
+
+
+def driver(request):
+       
+       
+    email = request.session.get('user_email')
+    driverList = haha.objects.filter(email=email)
+    driver = driverList.first()
+#    print(driver.status_flag)
+    flag = driver.status_flag
+    if driver.status_flag == 1:
+        hercar=car.objects.filter(driver_id=email).first()
+        passen = hercar.max_passanger
+        print(passen)
+        flag = 0
+        orderList=Ride.objects.filter(NumPassanger__lte=passen,status = 0)
+    else:
+        orderList = NULL
+        flag=1
+
+         
+    return render(request,'users/driver.html',{'isDriver':flag,'orderList':orderList})   
+
         
 
 def register(request):
