@@ -69,3 +69,12 @@ class editShareForm(forms.Form):
     CanShare = forms.ChoiceField(label="Would you like to share your ride with others?", choices=status)
     class Meta:
         model = Ride
+
+
+class UserSearchForm(forms.Form):
+    destination  = forms.CharField(label="Your destination", max_length = 20, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    earlist_time = forms.DateTimeField(input_formats=['%I:%M %p %d-%b-%Y'], widget = forms.DateTimeInput(attrs={'type': 'datetime-local'},format='%I:%M %p %d-%b-%Y'))
+    latest_time = forms.DateTimeField(input_formats=['%I:%M %p %d-%b-%Y'], widget = forms.DateTimeInput(attrs={'type': 'datetime-local'},format='%I:%M %p %d-%b-%Y'))
+    num_pass = forms.IntegerField(label="The number of passager in this ride:", min_value=1)
+    class Meta:
+        model = Ride

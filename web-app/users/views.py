@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render,redirect
 from django.contrib import messages
-from .forms import UserForm,CarForm,RideForm,LoginForm, editDestinationForm,editTimeForm, editNumForm
+from .forms import UserForm,CarForm,RideForm,LoginForm, editDestinationForm,editTimeForm, editNumForm, UserSearchForm
 from .models import haha,Ride, Relation
 from .models import car
 from django.http import HttpResponse
@@ -35,6 +35,7 @@ def driver1(request,id1):
         orderList=Ride.objects.filter(NumPassanger__lte=passen,status=0)
         
     else:
+        print("not a driver")
         orderList = None
         flag=1
 
@@ -42,21 +43,22 @@ def driver1(request,id1):
     return render(request,'users/driver.html',{'isDriver':flag,'orderList':orderList})   
 
 
-def driver(request):
-       
-       
+def driver(request):              
     email = request.session.get('user_email')
     driverList = haha.objects.filter(email=email)
     driver = driverList.first()
+    print(driver.email)
 #    print(driver.status_flag)
     flag = driver.status_flag
-    if driver.status_flag == 1:
+    print(flag)
+    if flag == '1':
         hercar=car.objects.filter(driver_id=email).first()
         passen = hercar.max_passanger
         print(passen)
         flag = 0
         orderList=Ride.objects.filter(NumPassanger__lte=passen,status = 0)
     else:
+        print("not a driver")
         orderList = None
         flag=1
 
@@ -153,6 +155,7 @@ def request(request):
             new_request.NumPassanger = num           
             new_request.CanShare = share
             new_request.owner_email = request.session.get('user_email')
+            new_request.max_passanger = 100
             #TODO: change to no/yes
             new_request.status = 0
             new_request.owner_id = request.session.get('user_id')
@@ -344,3 +347,53 @@ def edit_num_passanger(request, request_id):
 def index(request):
     return render(request, 'users/index.html');
     #return HttpResponse("This page is reserved for index")
+
+def search(request):
+    # display search form
+    if request.method == "POST":
+        form = UserSearchForm(request.POST)
+        message = "Please check what you have entered"
+        if form.is_valid():
+            destination = form.cleaned_data.get('destination')
+            time1 = form.cleaned_data.get('earlist_time')
+            time2 = form.cleaned_data.get('latest_time')
+            num = form.cleaned_data.get('num_pass')
+            if(time2<=time1):
+                    message = "latest time needs to be later than earlist time"
+                    return render(request, 'users/search.html', {'form':form, 'message':message})
+            else:
+                print("trying to find data")
+                try:
+                #valid input trying to filter data from database
+                    #results = Ride.objects.filter(max_passanger=num)
+                    results = Ride.objects.filter(destination=destination, arrivaltime__gte=time1, arrivaltime__lte=time2, max_passanger__gte=num)
+                    result = results.first()
+                    print(result.max_passanger)
+                    return render(request, 'users/search.html', {'form':form, 'results':results}) 
+                except:
+                    message = "no records are found"
+        return render(request, 'users/search.html',  {'form':form, 'message':message})
+    else:
+        form = UserSearchForm()
+    context = {'form':form}
+    return render(request, 'users/search.html', context=context)
+
+
+
+def join(request, request_id):
+    request_res = Ride.objects.get(pk=request_id)
+    #relation = Relation.objects.get(r_request_id = request_id)
+    email = request.session.get('user_email')
+    #try:
+    relation = Relation.objects.filter(r_request_id = request_res.id, r_sharer_email__isnull=True)
+    if not relation.count()==0:
+        #add new one to model
+        new_relation = Relation()
+        new_relation.r_request_id = request_res
+        new_relation.r_owner_email = request_res.owner_email
+        new_relation.r_driver_email = relation.first().r_driver_email
+        new_relation.r_sharer_email = email
+        new_relation.save()
+    else:
+        relation.r_sharer_email = email
+    return redirect('/index/')
