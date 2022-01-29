@@ -47,10 +47,10 @@
 	{% if request_id.status == 1 %}
             <li>Confirmed</li>
 	{% endif %}
-	{% if request_id.status == 2 %}
+	{% if request_id.status == 3 %}
             <li>Not complete</li>
 	{% endif %}
-	{% if request_id.status == 3 %}
+	{% if request_id.status == 2 %}
             <li>Complete</li>
 	{% endif %}    
 	    
@@ -62,20 +62,35 @@
 <div>
   <ul>
       <li>Vehicle Driver Email
-      <ul>
-	<li>{{driver.email}}</li>
-      </ul>
+	<ul>
+	  {% if request_id.status != 0 %}
+	     <li>{{driver.email}}</li>
+	  {% endif %}
+	  {% if request_id.status == 0 %}
+	     <li>Not Available</li>
+	  {% endif %}
+        </ul>
       </li>
 
       <li>Vehicle Plate
-      <ul>
-	<li>{{car.plate_number}}</li>
+	<ul>
+	  {% if request_id.status != 0 %}
+	     <li>{{car.plate_number}}</li>
+	  {% endif %}
+	  {% if request_id.status == 0 %}
+	     <li>Not Available</li>
+	  {% endif %}
       </ul>
       </li>
       
       <li>Vehicle Type
-      <ul>
-	<li>{{car.vehicle_type}}</li>
+	<ul>
+	  {% if request_id.status != 0 %}
+	     <li>{{car.vehicle_type}}</li>
+	  {% endif %}
+	  {% if request_id.status == 0 %}
+	     <li>Not Available</li>
+	  {% endif %}
       </ul>
       </li>
    </ul>

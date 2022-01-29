@@ -7,12 +7,26 @@
       <tr>
         <th>Destination</th>
         <th>Date/time</th>
+	<th>Status</th>
 	<th>Other</th>
       </tr>
       {% for request in requests %}
       <tr>
 	<td>{{request.destination}}</td>
 	<td>{{request.arrivaltime}}</td>
+	{% if request.status == 0 %}
+            <td>Not Confirmed</td>
+	{% endif %}
+	{% if request.status == 1 %}
+            <td>Confirmed</td>
+	{% endif %}
+	{% if request.status == 3 %}
+            <td>Not complete</td>
+	{% endif %}
+	{% if request.status == 2 %}
+            <td>Complete</td>
+	{% endif %}    
+
 	<td> <a href="{% url 'rideDetail' request.id %}">More Info</a></td>
       </tr>
       {% endfor %}

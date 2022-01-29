@@ -35,7 +35,7 @@ def driver1(request,id1):
         orderList=Ride.objects.filter(NumPassanger__lte=passen,status=0)
         
     else:
-        orderList = NULL
+        orderList = None
         flag=1
 
          
@@ -57,7 +57,7 @@ def driver(request):
         flag = 0
         orderList=Ride.objects.filter(NumPassanger__lte=passen,status = 0)
     else:
-        orderList = NULL
+        orderList = None
         flag=1
 
          
@@ -154,7 +154,7 @@ def request(request):
             new_request.CanShare = share
             new_request.owner_email = request.session.get('user_email')
             #TODO: change to no/yes
-            new_request.status = share
+            new_request.status = 0
             new_request.owner_id = request.session.get('user_id')
             new_request.save()
 
@@ -259,14 +259,24 @@ def rideDetail(request, request_id):
     request_res = Ride.objects.get(pk=request_id)
     print(request_res)
     owner = haha.objects.get(email=request_res.owner_email)
-    relation = Relation.objects.get(r_request_id=request_id)
-    print(relation)
-    driver_email = relation.r_driver_email;
-    print(driver_email)
-    driver = haha.objects.get(email=driver_email)
-    print(driver.email)
-    vehilce = car.objects.get(driver_id=driver_email)
-    print(vehilce.plate_number)
+    try:
+        relation = Relation.objects.get(r_request_id=request_id)
+        print(relation)
+        driver_email = relation.r_driver_email;
+        print(driver_email)
+        driver = haha.objects.get(email=driver_email)
+        print(driver.email)
+        vehilce = car.objects.get(driver_id=driver_email)
+        print(vehilce.plate_number)
+    except:
+        driver=haha.objects.first()
+        vehilce = car()
+        #vehilce = car.objects.first()
+        #car.driver_id = new_user.email
+        #car.vehicle_type =  car1.cleaned_data.get('vehicle_type')
+        #car.plate_number =  0
+        #car.max_passanger =  0
+
     return render(request, 'users/rideDetail.html', {'request_id':request_res, 'driver':driver, 'car':vehilce, 'owner':owner})
  #   return HttpResponse(response % request_id)
 
