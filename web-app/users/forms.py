@@ -65,6 +65,7 @@ class editNumForm(forms.Form):
         model = Ride
 
 class editShareForm(forms.Form):
+    status = {(0,"Yes" ),(1,"No")}
     CanShare = forms.ChoiceField(label="Would you like to share your ride with others?", choices=status)
     class Meta:
         model = Ride
