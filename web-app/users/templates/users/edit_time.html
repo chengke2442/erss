@@ -1,0 +1,15 @@
+{% extends "users/base.html" %}
+{% block content %}
+<h3>You are editing arrival time {{request.arrivalTime}}</h3>
+
+<div class="container">
+  <form class = 'form-time' action="{% url 'edit_time' request.id %}" method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      {{ edit_form.arrivalTime.label_tag}}
+      {{ edit_form.arrivalTime}}
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+</div>
+{% endblock content %}

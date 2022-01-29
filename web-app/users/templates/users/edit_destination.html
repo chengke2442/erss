@@ -1,0 +1,15 @@
+{% extends "users/base.html" %}
+{% block content %}
+<h3>You are editing destination {{request.destination}}</h3>
+
+<div class="container">
+  <form class = 'form-destination' action="{% url 'edit_destination' request.id %}" method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      {{ edit_form.destination.label_tag}}
+      {{ edit_form.destination}}
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+</div>
+{% endblock content %}

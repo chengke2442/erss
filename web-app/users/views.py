@@ -1,7 +1,8 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render,redirect
 from django.contrib import messages
-from .forms import UserForm,CarForm,RideForm,LoginForm
-from .models import haha,Ride,Relation
+from .forms import UserForm,CarForm,RideForm,LoginForm, editDestinationForm,editTimeForm, editNumForm
+from .models import haha,Ride, Relation
 from .models import car
 from django.http import HttpResponse
 from django.contrib.auth.models import User
@@ -67,8 +68,9 @@ def register(request):
         
     if request.method=='POST':
         form = UserForm(request.POST)
-        form2 = CarForm(request.POST)
-        if (form.is_valid()) and (form2.is_valid()):
+        #form2 = CarForm(request.POST)
+        #if (form.is_valid()) and (form2.is_valid()):
+        if (form.is_valid()):
             email = form.cleaned_data.get('email')
             password1 = form.cleaned_data.get('password1')
             password2 = form.cleaned_data.get('password2')
@@ -87,29 +89,28 @@ def register(request):
                 new_user.last_name = form.cleaned_data.get('last_name')
                 new_user.email= form.cleaned_data.get('email')
                 new_user.password = password1
-                new_user.status_flag = form.cleaned_data.get('status_flag')
-                new_user.vehicle_id =  form.cleaned_data.get('plate_number')
-                new_user.phone_number = form.cleaned_data.get('phone_number')
+                new_user.status_flag = 0
+                #new_user.status_flag = form.cleaned_data.get('status_flag')
+                #new_user.vehicle_id =  form.cleaned_data.get('plate_number')
+                #new_user.phone_number = form.cleaned_data.get('phone_number')
                 new_user.save()
-                new_car = car.objects.create()
-                new_car.driver_id = form.cleaned_data.get('email')
-                new_car.vehicle_type =  form2.cleaned_data.get('vehicle_type')
-                new_car.plate_number =  form2.cleaned_data.get('plate_number')
+                #new_car = car.objects.create()
+                #new_car.driver_id = form.cleaned_data.get('email')
+                #new_car.vehicle_type =  form2.cleaned_data.get('vehicle_type')
+                #new_car.plate_number =  form2.cleaned_data.get('plate_number')
                                                               
-                new_car.max_passanger =  form2.cleaned_data.get('max_passanger')
-                new_car.save()
+                #new_car.max_passanger =  form2.cleaned_data.get('max_passanger')
+                #new_car.save()
             return redirect('/login/')
     else:
         form = UserForm()
-        form2 = CarForm()
-    return render(request,'users/register.html',{'form':form,'car':form2})
+        #form2 = CarForm()
+    #return render(request,'users/register.html',{'form':form,'car':form2})
+    return render(request,'users/register.html',{'form':form})
 
 def login(request):
 #    if request.session.get('is_login',None):
-#        return redirect('/login')    
-#    if request.session.get('is_login',None):
-#        return redirect('/login')
-    
+#        return redirect('/login')        
     if request.method == "POST":
         login_form = LoginForm(request.POST)
         message = "Please check what you have entered"
@@ -152,7 +153,8 @@ def request(request):
             new_request.NumPassanger = num           
             new_request.CanShare = share
             new_request.owner_email = request.session.get('user_email')
-            new_request.status = 0
+            #TODO: change to no/yes
+            new_request.status = share
             new_request.owner_id = request.session.get('user_id')
             new_request.save()
 
@@ -254,6 +256,7 @@ def rideDetail(request, request_id):
 #    return HttpResponse(response % request_id)
     request_res = Ride.objects.get(pk=request_id)
     print(request_res)
+    owner = haha.objects.get(email=request_res.owner_email)
     relation = Relation.objects.get(r_request_id=request_id)
     print(relation)
     driver_email = relation.r_driver_email;
@@ -262,5 +265,64 @@ def rideDetail(request, request_id):
     print(driver.email)
     vehilce = car.objects.get(driver_id=driver_email)
     print(vehilce.plate_number)
-    return render(request, 'users/rideDetail.html', {'request_id':request_res, 'driver':driver, 'car':vehilce})
+    return render(request, 'users/rideDetail.html', {'request_id':request_res, 'driver':driver, 'car':vehilce, 'owner':owner})
  #   return HttpResponse(response % request_id)
+
+
+def edit_destination(request, request_id):
+    request_res = Ride.objects.get(pk=request_id)
+    print(request_res)
+    if request.method == "POST":
+        print("find post")
+        form = editDestinationForm(request.POST)
+        if form.is_valid():
+            new_destination = form.cleaned_data.get('destination')
+            request_res.destination = new_destination
+            request_res.save()
+            print(request_res.destination)
+            return redirect('rideDetail', request_id=request_res.id)
+#            return HttpResponseRedirect("ride/" % request_res.id)
+
+    form = editDestinationForm()
+    context = {'request':request_res, 'edit_form':form}
+    return render(request, 'users/edit_destination.html', context=context)
+
+
+
+def edit_time(request, request_id):
+#     response = "You're editing details of ride %s."
+#     return HttpResponse(response % request_id)
+    request_res = Ride.objects.get(pk=request_id)
+    print(request_res)
+    if request.method == "POST":
+        form = editTimeForm(request.POST)
+        if form.is_valid():
+            new_time = form.cleaned_data.get('arrivalTime')
+            print(new_time)
+            request_res.arrivaltime = new_time
+            request_res.save()
+            print(request_res.arrivaltime)
+            return redirect('rideDetail', request_id=request_res.id)
+#            return HttpResponseRedirect("ride/" % request_res.id)
+
+    form = editTimeForm()
+    context = {'request':request_res, 'edit_form':form}
+    return render(request, 'users/edit_time.html', context=context)
+
+
+def edit_num_passanger(request, request_id):
+    request_res = Ride.objects.get(pk=request_id)
+    print(request_res)
+    if request.method == "POST":
+        form = editNumForm(request.POST)
+        if form.is_valid():
+            new_num = form.cleaned_data.get('num')
+            request_res.NumPassanger = new_num
+            request_res.save()
+            print(request_res.NumPassanger)
+            return redirect('rideDetail', request_id=request_res.id)
+#            return HttpResponseRedirect("ride/" % request_res.id)
+
+    form = editNumForm()
+    context = {'request':request_res, 'edit_form':form}
+    return render(request, 'users/edit_num.html', context=context)
