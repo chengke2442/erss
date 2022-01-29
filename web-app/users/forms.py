@@ -8,12 +8,12 @@ class UserForm(forms.Form):
     status = {('1',"I want to be a driver" ),('0',"I don't want to be a driver")}
     first_name = forms.CharField(label="First Name",max_length = 30,widget = forms.TextInput(attrs={'class':'form-control'}))
     last_name = forms.CharField(label="Last Name",max_length = 30,widget = forms.TextInput(attrs={'class':'form-control'}))
-    password1 = forms.CharField(label = "Password",max_length = 256,widget = forms.PasswordInput(attrs={'class':'form-control'}))
-    password2 =  forms.CharField(label = "Comfirm Password",max_length = 256,widget = forms.PasswordInput(attrs={'class':'form-control'}))         
+    password1 = forms.CharField(label = "Password",max_length = 256,widget = forms.PasswordInput(attrs={'class':'form-control'}),required = False)
+    password2 =  forms.CharField(label = "Comfirm Password",max_length = 256,widget = forms.PasswordInput(attrs={'class':'form-control'}),required = False)         
     email = forms.EmailField(label="Email",widget=forms.EmailInput(attrs={'class':'form-control'}))
     phone_number = forms.CharField(label="Phone Number",max_length = 100,widget = forms.TextInput(attrs={'class':'form-control'}))
-    status_flag = forms.ChoiceField(label = "Would like to be a driver?",choices = status )
-    vehicle_id = forms.CharField(label="Vehicle id",max_length=10)      
+    status_flag = forms.ChoiceField(label = "Would like to be a driver?",choices = status,required=False )
+    vehicle_id = forms.CharField(label="Vehicle id",max_length=10,required = False)      
     class Meta:
         model = haha
 

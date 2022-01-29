@@ -1,12 +1,30 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from .forms import UserForm,CarForm,RideForm,LoginForm
-from .models import haha,Ride, Relation
+from .models import haha,Ride,Relation
 from .models import car
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 
 # Create your views here.
+def driver(request):
+    email = request.session.get('user_email')
+    driverList = haha.objects.filter(email=email)
+    driver = driverList.first()
+#    print(driver.status_flag)
+    flag = driver.status_flag
+    if driver.status_flag == 1:
+        hercar=car.objects.filter(driver_id=email).first()
+        passen = hercar.max_passanger
+        print(passen)
+        flag = 0
+        orderList=Ride.objects.filter(NumPassanger__lte=passen)
+    else:
+        orderList = NULL
+        flag=1 
+    return render(request,'users/driver.html',{'isDriver':flag,'orderList':orderList})   
+    
+        
 
 def register(request):
         
@@ -26,7 +44,8 @@ def register(request):
                     message = "Email has has been registered!"
                     return render(request,'users/register.html',{'form':form,'car':form2})
 
-                new_user = haha.objects.create()
+                new_user = haha()
+                print(email)
                 new_user.first_name = form.cleaned_data.get('first_name')
                 new_user.last_name = form.cleaned_data.get('last_name')
                 new_user.email= form.cleaned_data.get('email')
@@ -125,7 +144,7 @@ def logout(request):
     request.session.flush()
     return redirect("/login/")
 	
-def addDriver(request):
+def addCar(request):
     form2 = CarForm(request.POST)
     if form2.is_valid():
                 h = request.session.get('user_id',None) 
@@ -133,24 +152,66 @@ def addDriver(request):
                 new_user.status_flag = 1
                 new_user.save()
                 new_car = car.objects.create()
-                new_car.driver_id = new_user
+                new_car.driver_id = new_user.email
                 new_car.vehicle_type =  form2.cleaned_data.get('vehicle_type')
                 new_car.plate_number =  form2.cleaned_data.get('plate_number')
                                                               
                 new_car.max_passanger =  form2.cleaned_data.get('max_passanger')
                 new_car.save()
+                return redirect('/profile/')
     return render(request,'users/newDriver.html',{'car':form2})
 
 def profile(request):
     if not request.session.get('is_login',None):
         return redirect('/login/')
+    
     email = request.session.get('user_email',False)
-    print(email)
+       
     users = haha.objects.filter(email=email).first()
-    cars = car.objects.filter(driver_id = users)
+    cars = car.objects.filter(driver_id = email).first()
  
     return render(request,'users/profile.html',{'users':users,'cars':cars})
 
+def profile_edit(request):
+    user = request.session.get('user_email',False)
+    new_user = haha.objects.filter(email=user).first()
+    
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        print(form.is_valid())
+        if form.is_valid():                     
+             new_user.first_name = form.cleaned_data.get('first_name')
+             print(new_user.first_name)
+             new_user.last_name = form.cleaned_data.get('last_name')
+             new_user.email= form.cleaned_data.get('email')
+                               
+             new_user.vehicle_id =  form.cleaned_data.get('plate_number')
+             new_user.phone_number = form.cleaned_data.get('phone_number')
+             new_user.save()
+
+        if new_user.status_flag==1:
+        
+            car1 = CarForm(request.POST)
+            if car1.is_valid():
+                oldcar = car.objects.filter(driver_id = user).first()
+                oldcar.driver_id = new_user.email
+                oldcar.vehicle_type =  car1.cleaned_data.get('vehicle_type')
+                oldcar.plate_number =  car1.cleaned_data.get('plate_number')                                                            
+                oldcar.max_passanger =  car1.cleaned_data.get('max_passanger')
+                oldcar.save()
+        return redirect('/profile/')        
+    else:
+        UserForm1 = UserForm(initial={"first_name":new_user.first_name,"last_name":new_user.last_name,"phone_number":new_user.phone_number,"email":new_user.email})
+        
+        if new_user.status_flag == 1:
+       
+            oldcar = car.objects.filter(driver_id = user).first()
+            CarForm1 = CarForm(initial={"vehicle_type":oldcar.vehicle_type,"plate_number":oldcar.plate_number,"max_passanger":oldcar.max_passanger})
+            return render(request,'users/profile_edit.html',{'isDriver':1,'user_form':UserForm1,'car_form':CarForm1})
+        else:
+            return render(request,'users/profile_edit.html',{'isDriver':0,'user_form':UserForm1})
+        
+        
 def rideDetail(request, request_id):
     response = "You're looking at the details of ride %s."
 #    return HttpResponse(response % request_id)

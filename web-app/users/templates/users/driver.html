@@ -1,0 +1,42 @@
+{% extends "users/base.html" %}
+{% block content %}
+
+{% if isDriver  %}
+<h1>Sorry,You are not a driver and you cannot accept orders</h1>
+ <a href = "/addCar/">I Want to be a driver </a>
+ {% else %}
+ {% if orderList %}
+  <table class = "table">
+   <thead>
+     <tr>
+       <th scope = "col">Destination</th>
+       <th scope = "col">Arrival Time</th>
+       <th scope = "col">Number of Passange</th>
+       <th scope = "col">Shared</th>
+       <th scope = "col">confirm</th>
+       </tr>
+   </thead>
+   {% for ride in orderList %}
+   <tbody>
+     <tr>
+   <td>       {{ride.destination}}</td>
+     
+     <td>{{ride.arrivaltime}}</td>
+     <td>{{ride.NumPassanger}}</td>
+     {% if ride.CanShare == 1 %}
+     <td>Yes</td>
+     {% else %}
+     <td>No</td>
+     {% endif %}
+     <td>Confirm</td>
+     </tr>
+     {% endfor %}
+     </tbody>
+ </table>
+
+ {% else %}
+ <h1>No ride available</h1>
+ {% endif %}
+  {% endif %}  
+{% endblock%}
+
