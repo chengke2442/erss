@@ -31,8 +31,9 @@ def register(request):
         
     if request.method=='POST':
         form = UserForm(request.POST)
-        form2 = CarForm(request.POST)
-        if (form.is_valid()) and (form2.is_valid()):
+        #form2 = CarForm(request.POST)
+        #if (form.is_valid()) and (form2.is_valid()):
+        if (form.is_valid()):
             email = form.cleaned_data.get('email')
             password1 = form.cleaned_data.get('password1')
             password2 = form.cleaned_data.get('password2')
@@ -51,29 +52,28 @@ def register(request):
                 new_user.last_name = form.cleaned_data.get('last_name')
                 new_user.email= form.cleaned_data.get('email')
                 new_user.password = password1
-                new_user.status_flag = form.cleaned_data.get('status_flag')
-                new_user.vehicle_id =  form.cleaned_data.get('plate_number')
-                new_user.phone_number = form.cleaned_data.get('phone_number')
+                new_user.status_flag = 0
+                #new_user.status_flag = form.cleaned_data.get('status_flag')
+                #new_user.vehicle_id =  form.cleaned_data.get('plate_number')
+                #new_user.phone_number = form.cleaned_data.get('phone_number')
                 new_user.save()
-                new_car = car.objects.create()
-                new_car.driver_id = form.cleaned_data.get('email')
-                new_car.vehicle_type =  form2.cleaned_data.get('vehicle_type')
-                new_car.plate_number =  form2.cleaned_data.get('plate_number')
+                #new_car = car.objects.create()
+                #new_car.driver_id = form.cleaned_data.get('email')
+                #new_car.vehicle_type =  form2.cleaned_data.get('vehicle_type')
+                #new_car.plate_number =  form2.cleaned_data.get('plate_number')
                                                               
-                new_car.max_passanger =  form2.cleaned_data.get('max_passanger')
-                new_car.save()
+                #new_car.max_passanger =  form2.cleaned_data.get('max_passanger')
+                #new_car.save()
             return redirect('/login/')
     else:
         form = UserForm()
-        form2 = CarForm()
-    return render(request,'users/register.html',{'form':form,'car':form2})
+        #form2 = CarForm()
+    #return render(request,'users/register.html',{'form':form,'car':form2})
+    return render(request,'users/register.html',{'form':form})
 
 def login(request):
 #    if request.session.get('is_login',None):
-#        return redirect('/login')    
-#    if request.session.get('is_login',None):
-#        return redirect('/login')
-    
+#        return redirect('/login')        
     if request.method == "POST":
         login_form = LoginForm(request.POST)
         message = "Please check what you have entered"
