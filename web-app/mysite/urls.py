@@ -28,4 +28,5 @@ urlpatterns = [
     path('ride/', include('users.urls')),
     path('addCar/',user_views.addDriver,name = 'add'),
     path('register/', user_views.register, name = 'register'),
+#    path('edit_destination/', include('users.urls'), name = 'edit_destination'),
 ]

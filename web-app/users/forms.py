@@ -45,3 +45,9 @@ class LoginForm(forms.Form):
     password = forms.CharField(label = "Password",max_length = 256,widget = forms.PasswordInput())
     class Meta:
         model = haha
+
+
+class editDestinationForm(forms.Form):
+    destination  = forms.CharField(label="Your destination", max_length = 20, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    class Meta:
+        model = Ride

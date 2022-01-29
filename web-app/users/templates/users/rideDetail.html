@@ -2,39 +2,83 @@
 {% block content %}
 <h3> Ride {{request_id.id}} Basic Info</h3>
 <div>
-    <table>
-      <tr>
-        <th>Destination</th>
-        <th>Date/time</th>
-	<th># of passangers</th>
-	<th>Can share?</th>
-	<th>status</th>
-      </tr>
-      <tr>
-	<td>{{request_id.destination}}</td>
-	<td>{{request_id.arrivaltime}}</td>
-	<td>{{request_id.NumPassanger}}</td>
-	<td>{{request_id.CanShare}}</td>
-	<td>{{request_id.status}}</td>
-      </tr>
-    </table>
-  
+  <ul>
+    <li>Owner Name
+      <ul>
+	<li>{{owner.first_name}}</li>
+      </ul>
+    </li>
+    <li>Owner Email
+      <ul>
+	<li>{{owner.email}}</a></li>
+      </ul>
+    </li>
+    <li>Destination
+      <ul>
+	<li><a href="{% url 'edit_destination' request_id.id %}">{{request_id.destination}}</a></li>
+      </ul>
+    </li>
+    <li>Date/time
+      <ul>
+        <li><a href="#">{{request_id.arrivaltime}}</a></li>
+      </ul>
+    </li>
+    <li># of passangers
+      <ul>
+        <li><a href="#">{{request_id.NumPassanger}}</a></li>
+      </ul>
+    </li>
+    <li>Sharable?
+      <ul>
+	{% if request_id.CanShare == 0 %}
+        <li><a href="#">Can Share</a></li>
+	{% endif %}
+	{% if request_id.CanShare == 1 %}
+        <li><a href="#">Cannot Share</a></li>
+	{% endif %}
+	
+      </ul>
+    </li>
+    <li>Status
+      <ul>
+	{% if request_id.status == 0 %}
+            <li>Not Confirmed</li>
+	{% endif %}
+	{% if request_id.status == 1 %}
+            <li>Confirmed</li>
+	{% endif %}
+	{% if request_id.status == 2 %}
+            <li>Not complete</li>
+	{% endif %}
+	{% if request_id.status == 3 %}
+            <li>Complete</li>
+	{% endif %}    
+	    
+      </ul>
+    </li>
+    
 </div>
 <h3> Ride {{request_id.id}} Vehicle Info</h3>  
 <div>
-    <table>
-      <tr>
-        <th>Vehicle Driver Email</th>
-        <th>Vehicle Plate</th>
-	<th>Vehicle Type</th>
-      </tr>
-      <tr>
-	<td>{{driver.email}}</td>
-	<td>{{car.plate_number}}</td>
-	<td>{{car.vehicle_type}}</td>
-      </tr>
-    </table>
-  
+  <ul>
+      <li>Vehicle Driver Email
+      <ul>
+	<li>{{driver.email}}</li>
+      </ul>
+      </li>
+
+      <li>Vehicle Plate
+      <ul>
+	<li>{{car.plate_number}}</li>
+      </ul>
+      </li>
+      
+      <li>Vehicle Type
+      <ul>
+	<li>{{car.vehicle_type}}</li>
+      </ul>
+      </li>
+   </ul>
 </div>
 
 

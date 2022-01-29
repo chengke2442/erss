@@ -1,6 +1,7 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render,redirect
 from django.contrib import messages
-from .forms import UserForm,CarForm,RideForm,LoginForm
+from .forms import UserForm,CarForm,RideForm,LoginForm, editDestinationForm
 from .models import haha,Ride, Relation
 from .models import car
 from django.http import HttpResponse
@@ -156,6 +157,7 @@ def rideDetail(request, request_id):
 #    return HttpResponse(response % request_id)
     request_res = Ride.objects.get(pk=request_id)
     print(request_res)
+    owner = haha.objects.get(email=request_res.owner_email)
     relation = Relation.objects.get(r_request_id=request_id)
     print(relation)
     driver_email = relation.r_driver_email;
@@ -164,5 +166,26 @@ def rideDetail(request, request_id):
     print(driver.email)
     vehilce = car.objects.get(driver_id=driver_email)
     print(vehilce.plate_number)
-    return render(request, 'users/rideDetail.html', {'request_id':request_res, 'driver':driver, 'car':vehilce})
+    return render(request, 'users/rideDetail.html', {'request_id':request_res, 'driver':driver, 'car':vehilce, 'owner':owner})
  #   return HttpResponse(response % request_id)
+
+
+def edit_destination(request, request_id):
+#     response = "You're editing details of ride %s."
+#     return HttpResponse(response % request_id)
+    request_res = Ride.objects.get(pk=request_id)
+    print(request_res)
+    if request.method == "POST":
+        print("find post")
+        form = editDestinationForm(request.POST)
+        if form.is_valid():
+            new_destination = form.cleaned_data.get('destination')
+            request_res.destination = new_destination
+            request_res.save()
+            print(request_res.destination)
+            return redirect('rideDetail', request_id=request_res.id)
+#            return HttpResponseRedirect("ride/" % request_res.id)
+
+    form = editDestinationForm()
+    context = {'request':request_res, 'edit_form':form}
+    return render(request, 'users/edit_destination.html', context=context)
