@@ -26,7 +26,9 @@ urlpatterns = [
     path('profile/',user_views.profile,name='profile'),
     path('logout/',user_views.logout,name='rides-logout'),
     path('ride/', include('users.urls')),
-    path('addCar/',user_views.addDriver,name = 'add'),
+    path('addCar/',user_views.addCar,name = 'add'),
     path('register/', user_views.register, name = 'register'),
 #    path('edit_destination/', include('users.urls'), name = 'edit_destination'),
+    path('driver/',user_views.driver,name = 'driver-order'),
+    path('profile_edit/',user_views.profile_edit,name = 'edit-profile'),
 ]
