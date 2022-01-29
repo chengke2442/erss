@@ -19,7 +19,7 @@ from users import views as user_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('main/',user_views.main,name='main'),
+    path('index/',user_views.index,name='index'),
     path('login/',user_views.login,name='login'),
     path('request/',user_views.request,name='ride-request'),
     path('display/',user_views.display_my_rides,name = 'rides-display'),

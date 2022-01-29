@@ -6,6 +6,7 @@ from .models import haha,Ride, Relation
 from .models import car
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.contrib import messages
 
 # Create your views here.
 def driver(request):
@@ -27,8 +28,7 @@ def driver(request):
     
         
 
-def register(request):
-        
+def register(request):        
     if request.method=='POST':
         form = UserForm(request.POST)
         #form2 = CarForm(request.POST)
@@ -55,7 +55,7 @@ def register(request):
                 new_user.status_flag = 0
                 #new_user.status_flag = form.cleaned_data.get('status_flag')
                 #new_user.vehicle_id =  form.cleaned_data.get('plate_number')
-                #new_user.phone_number = form.cleaned_data.get('phone_number')
+                new_user.phone_number = form.cleaned_data.get('phone_number')
                 new_user.save()
                 #new_car = car.objects.create()
                 #new_car.driver_id = form.cleaned_data.get('email')
@@ -72,8 +72,8 @@ def register(request):
     return render(request,'users/register.html',{'form':form})
 
 def login(request):
-#    if request.session.get('is_login',None):
-#        return redirect('/login')        
+    if request.session.get('is_login',None):
+        return redirect('/index/')        
     if request.method == "POST":
         login_form = LoginForm(request.POST)
         message = "Please check what you have entered"
@@ -88,7 +88,7 @@ def login(request):
                      request.session['is_login']=True
                      request.session['user_email']=user.email
                      request.session['user_id']=user.id
-                     return redirect('/request/')
+                     return redirect('/index/')
                  else:
                      message = "Incorrect password"
             except:
@@ -142,8 +142,10 @@ def display_my_rides(request):
 
 def logout(request):
     if not request.session.get('is_login',None):
+        #messages.info(request, 'You have not logged in!')
         return redirect("/login/")
     request.session.flush()
+    #messages.info(request, 'Logout successfully')
     return redirect("/login/")
 	
 def addCar(request):
@@ -289,3 +291,9 @@ def edit_num_passanger(request, request_id):
     form = editNumForm()
     context = {'request':request_res, 'edit_form':form}
     return render(request, 'users/edit_num.html', context=context)
+
+
+
+def index(request):
+    return render(request, 'users/index.html');
+    #return HttpResponse("This page is reserved for index")
