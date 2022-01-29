@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render,redirect
 from django.contrib import messages
-from .forms import UserForm,CarForm,RideForm,LoginForm, editDestinationForm
+from .forms import UserForm,CarForm,RideForm,LoginForm, editDestinationForm,editTimeForm, editNumForm
 from .models import haha,Ride, Relation
 from .models import car
 from django.http import HttpResponse
@@ -116,7 +116,8 @@ def request(request):
             new_request.NumPassanger = num           
             new_request.CanShare = share
             new_request.owner_email = request.session.get('user_email')
-            new_request.status = 0
+            #TODO: change to no/yes
+            new_request.status = share
             new_request.owner_id = request.session.get('user_id')
             new_request.save()
 
@@ -232,8 +233,6 @@ def rideDetail(request, request_id):
 
 
 def edit_destination(request, request_id):
-#     response = "You're editing details of ride %s."
-#     return HttpResponse(response % request_id)
     request_res = Ride.objects.get(pk=request_id)
     print(request_res)
     if request.method == "POST":
@@ -250,3 +249,43 @@ def edit_destination(request, request_id):
     form = editDestinationForm()
     context = {'request':request_res, 'edit_form':form}
     return render(request, 'users/edit_destination.html', context=context)
+
+
+
+def edit_time(request, request_id):
+#     response = "You're editing details of ride %s."
+#     return HttpResponse(response % request_id)
+    request_res = Ride.objects.get(pk=request_id)
+    print(request_res)
+    if request.method == "POST":
+        form = editTimeForm(request.POST)
+        if form.is_valid():
+            new_time = form.cleaned_data.get('arrivalTime')
+            print(new_time)
+            request_res.arrivaltime = new_time
+            request_res.save()
+            print(request_res.arrivaltime)
+            return redirect('rideDetail', request_id=request_res.id)
+#            return HttpResponseRedirect("ride/" % request_res.id)
+
+    form = editTimeForm()
+    context = {'request':request_res, 'edit_form':form}
+    return render(request, 'users/edit_time.html', context=context)
+
+
+def edit_num_passanger(request, request_id):
+    request_res = Ride.objects.get(pk=request_id)
+    print(request_res)
+    if request.method == "POST":
+        form = editNumForm(request.POST)
+        if form.is_valid():
+            new_num = form.cleaned_data.get('num')
+            request_res.NumPassanger = new_num
+            request_res.save()
+            print(request_res.NumPassanger)
+            return redirect('rideDetail', request_id=request_res.id)
+#            return HttpResponseRedirect("ride/" % request_res.id)
+
+    form = editNumForm()
+    context = {'request':request_res, 'edit_form':form}
+    return render(request, 'users/edit_num.html', context=context)

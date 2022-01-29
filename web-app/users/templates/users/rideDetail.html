@@ -20,12 +20,12 @@
     </li>
     <li>Date/time
       <ul>
-        <li><a href="#">{{request_id.arrivaltime}}</a></li>
+        <li><a href="{% url 'edit_time' request_id.id %}">{{request_id.arrivaltime}}</a></li>
       </ul>
     </li>
     <li># of passangers
       <ul>
-        <li><a href="#">{{request_id.NumPassanger}}</a></li>
+        <li><a href="{% url 'edit_num_passanger' request_id.id %}">{{request_id.NumPassanger}}</a></li>
       </ul>
     </li>
     <li>Sharable?

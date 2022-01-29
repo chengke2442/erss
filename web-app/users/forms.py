@@ -51,3 +51,20 @@ class editDestinationForm(forms.Form):
     destination  = forms.CharField(label="Your destination", max_length = 20, widget=forms.TextInput(attrs={'class': 'form-control'}))
     class Meta:
         model = Ride
+
+
+class editTimeForm(forms.Form):
+    arrivalTime = forms.DateTimeField(input_formats=['%I:%M %p %d-%b-%Y'], widget = forms.DateTimeInput(attrs={'type': 'datetime-local'},format='%I:%M %p %d-%b-%Y'))
+    class Meta:
+        model = Ride
+
+
+class editNumForm(forms.Form):
+    num = forms.IntegerField(label="The number of passager in this ride:", min_value=1)
+    class Meta:
+        model = Ride
+
+class editShareForm(forms.Form):
+    CanShare = forms.ChoiceField(label="Would you like to share your ride with others?", choices=status)
+    class Meta:
+        model = Ride
