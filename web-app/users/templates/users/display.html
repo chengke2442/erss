@@ -3,6 +3,8 @@
 
 <h1> This is a display page</h1>
 <div>
+  {% if requests %}
+  <h3>I am the owner of the following rides</h3>
     <table>
       <tr>
         <th>Destination</th>
@@ -31,8 +33,83 @@
       </tr>
       {% endfor %}
     </table>
-  
+    {% else %}
+    <h3>Not own any rides</h3>
+    {% endif %}
 </div>
+
+<div>
+  {% if drivers %}
+  <h3>I am the driver of the following rides</h3>
+    <table>
+      <tr>
+        <th>Destination</th>
+        <th>Date/time</th>
+	<th>Status</th>
+	<th>Other</th>
+      </tr>
+      {% for driver in drivers %}
+      <tr>
+	<td>{{driver.destination}}</td>
+	<td>{{driver.arrivaltime}}</td>
+	{% if driver.status == 0 %}
+            <td>Not Confirmed</td>
+	{% endif %}
+	{% if driver.status == 1 %}
+            <td>Confirmed</td>
+	{% endif %}
+	{% if driver.status == 3 %}
+            <td>Not complete</td>
+	{% endif %}
+	{% if driver.status == 2 %}
+            <td>Complete</td>
+	{% endif %}    
+
+	<td> <a href="{% url 'rideDetail' driver.id %}">More Info</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}
+    <h3>Not drive any ride</h3>
+    {% endif %}
+</div>
+
+<div>
+  {% if sharers %}
+  <h3>I am the sharer of the following rides</h3>
+    <table>
+      <tr>
+        <th>Destination</th>
+        <th>Date/time</th>
+	<th>Status</th>
+	<th>Other</th>
+      </tr>
+      {% for sharer in sharers %}
+      <tr>
+	<td>{{sharer.destination}}</td>
+	<td>{{sharer.arrivaltime}}</td>
+	{% if sharer.status == 0 %}
+            <td>Not Confirmed</td>
+	{% endif %}
+	{% if sharer.status == 1 %}
+            <td>Confirmed</td>
+	{% endif %}
+	{% if sharer.status == 3 %}
+            <td>Not complete</td>
+	{% endif %}
+	{% if sharer.status == 2 %}
+            <td>Complete</td>
+	{% endif %}    
+
+	<td> <a href="{% url 'rideDetail' driver.id %}">More Info</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}
+    <h3>Not join anyr ides</h3>
+    {% endif %}
+</div>
+
  <ul>
       <li><a href="/index/">BACK TO INDEX</a></li>
   </ul>

@@ -35,6 +35,7 @@
   </form>
 
   {% if results %}
+  <h1>Results</h1>
       <table class = "table">
       <thead>
       <tr>
@@ -46,7 +47,7 @@
       </tr>
       </thead>
    {% for result in results %}
-      <h1>Results</h1>
+      <!--h1>Results</h1-->
       <tbody>
      <tr>
    <td>       {{result.destination}}</td>
@@ -55,10 +56,17 @@
      <td>{{result.NumPassanger}}</td>
      {% if result.CanShare == 0 %}
          <td>Yes</td>
-         <td><a href="/join/{{result.id}}/" >Join</td>
+         <!--td><a href="/join/{{result.id}}/" >Join</td-->
      {% else %}
          <td>No</td>
-         <td>Cannot join</td>
+     {% endif %}
+     {% if result.owner_email == owner_email %}
+          <td>You are the owener of this ride</td>
+   
+     {% elif result.CanShare == 0 %}
+          <td><a href="/join/{{result.id}}/" >Join</td>
+     {% else %}
+        <td>Cannot join</td>
      {% endif %}
 	 
 	 <!--td><a href="/join/{{result.id}}/" >Join</td-->

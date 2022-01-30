@@ -31,6 +31,7 @@ def driver1(request,id1):
     if driver.status_flag == 1:
         hercar=car.objects.filter(driver_id=email).first()
         passen = hercar.max_passanger
+        kk.max_passanger = passen-kk.NumPassanger
         print(passen)
         flag = 0
         orderList=Ride.objects.filter(NumPassanger__lte=passen,status=0)
@@ -178,7 +179,23 @@ def display_my_rides(request):
 #    return HttpResponse("a display pagexxxxxx")
      requests = Ride.objects.filter(owner_email=request.session.get('user_email'))
      print(requests)
-     context = {'requests':requests}
+     #context = {'requests':requests}
+     #filter driver
+     drive = list(Relation.objects.filter(r_driver_email=request.session.get('user_email')).values('r_request_id'))
+     print(drive)
+     res = [ sub['r_request_id'] for sub in drive ]
+     print(res)
+     drivers = None
+     if Ride.objects.filter(id__in=res):
+         drivers = Ride.objects.filter(id__in=res)
+     print(drivers)
+     #TODO filter sharer
+     share = list(Relation.objects.filter(r_sharer_email=request.session.get('user_email')).values('r_request_id'))
+     share_res = [ sub['r_request_id'] for sub in drive ]
+     sharer = None
+     if Ride.objects.filter(id__in=share_res):
+         sharers = Ride.objects.filter(id__in=share_res)
+     context = {'requests':requests, 'drivers':drivers, 'sharer':sharers}
      return render(request, "users/display.html", context=context)
 
 def logout(request):
@@ -274,26 +291,11 @@ def rideDetail(request, request_id):
     except:
         driver=None
         vehilce = None
-        #print(vehilce.plate_number)
-    
-        #        print(share_emails)
-    wanted_sharers = set()
     sharers = None
     try:
         sharers = Relation.objects.filter(r_request_id=request_id).values('r_sharer_email')
     except:
-        sharers = None
-    #try:
-    #    for relation in relations:
-    #        print(relation.r_sharer_email)
-    #        wanted_sharers.add(haha.objects.filter(email=relation.r_sharer_email).first().id)
-    #    print(wanted_sharers)
-    #    sharers = haha.objects.filter(pk__in = wanted_sharers)
-    #except:
-    #     print("no shares found")
-    #     sharers = None
-    #sharers = haha.objects.filter(email__in = emails)  
-    
+        sharers = None    
     return render(request, 'users/rideDetail.html', {'request_id':request_res, 'driver':driver, 'car':vehilce, 'owner':owner, 'sharers':sharers})
  #   return HttpResponse(response % request_id)
 
@@ -372,6 +374,7 @@ def search(request):
             time1 = form.cleaned_data.get('earlist_time')
             time2 = form.cleaned_data.get('latest_time')
             num = form.cleaned_data.get('num_pass')
+            request.session['num']=num
             if(time2<=time1):
                     message = "latest time needs to be later than earlist time"
                     return render(request, 'users/search.html', {'form':form, 'message':message})
@@ -383,7 +386,8 @@ def search(request):
                     results = Ride.objects.filter(destination=destination, arrivaltime__gte=time1, arrivaltime__lte=time2, max_passanger__gte=num)
                     result = results.first()
                     print(result.max_passanger)
-                    return render(request, 'users/search.html', {'form':form, 'results':results}) 
+        
+                    return render(request, 'users/search.html', {'form':form, 'results':results, 'owner_email':request.session.get('user_email')}) 
                 except:
                     message = "no records are found"
         return render(request, 'users/search.html',  {'form':form, 'message':message})
@@ -396,6 +400,7 @@ def search(request):
 
 def join(request, request_id):
     request_res = Ride.objects.get(pk=request_id)
+    request_res.max_passanger -= request.session.get('num') 
     #relation = Relation.objects.get(r_request_id = request_id)
     email = request.session.get('user_email')
     #try:
