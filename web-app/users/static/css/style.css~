@@ -1,0 +1,20 @@
+html,body,div,ul,li,h1,h2,h3,h4,h5,h6,p,form,input,th,td{
+    margin:0;
+    padding:0;
+}
+*{box-sizing:border-box;}
+a {
+    text-decoration:none;
+}
+.loginbox{
+    margin:auto;
+    width:500px;
+    height:300px;
+    text-align:center;
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    
+}

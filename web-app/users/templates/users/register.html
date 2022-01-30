@@ -1,12 +1,12 @@
 {% extends "users/base.html" %}
 {% block content %}
-<div class = "content-section">
+<div class = "content-section" style="margin-top:60px;width:50%;margin-left:25%;background-color:white;padding:30px;border-radius:15px;">
   <form class='form-register' action = "/register/"  method = "POST">
     {% if message %}
       <div class = "alert alert-warning">{{message}}</div>
     {% endif %}
     {% csrf_token %}
-    <h2 class="text-center">Welcome to register</h2>
+    <h2 class="text-center" style="margin-bottom:30px;">Welcome to register</h2>
               <div class="form-group">
                   {{ form.first_name.label_tag }}
                   {{ form.first_name}}
@@ -53,7 +53,7 @@
               </div-->
                    
 
-              <button type="submit" class="btn btn-primary pull-right">Submit</button>
+              <button type="submit" class="btn btn-primary pull-right" style="margin-left:40%;margin-top:20px;margin-bottom:20px;">Submit</button>
 
     
   </form>
