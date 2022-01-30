@@ -1,0 +1,18 @@
+html,body,div,ul,li,h1,h2,h3,h4,h5,h6,p,form,input,th,td{
+    margin:0;
+    padding:0;
+}
+*{box-sizing:border-box;}
+a {
+    text-decoration:none;
+}
+.loginbox{
+    margin-top:60px;
+    width:50%;
+    margin-left:25%;
+    background-color:white;
+    padding:30px;
+    border-radius:15px;
+    
+    
+}

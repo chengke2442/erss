@@ -1,8 +1,7 @@
-from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.shortcuts import render,redirect
 from django.contrib import messages
-from .forms import UserForm,CarForm,RideForm,LoginForm, editDestinationForm,editTimeForm, editNumForm, UserSearchForm
+from .forms import UserForm,CarForm,RideForm,LoginForm, editDestinationForm,editTimeForm, editNumForm
 from .models import haha,Ride, Relation
 from .models import car
 from django.http import HttpResponse
@@ -13,16 +12,16 @@ from django.core.mail import send_mail
 # Create your views here.
 def driver1(request,id1):
     kk= Ride.objects.get(pk = id1)
-    kk.status = 1
+    kk.status = kk.status+1
     kk.save()
     print(kk)
     rela = Relation.objects.get(r_request_id = kk)
     rela.r_driver_email = request.session.get('user_email')
     rela.save()
     
-    send_mail('Confirmed Email','xxxxx','kkhw568@gmail',['rrrrjin24@gmail'],fail_silently=False)
+    send_mail('Confirmed Email','狗都不打车','hw568ece@outlook.com',['kkhw568@gmail.com'],fail_silently=False)
        
-       
+    
     email = request.session.get('user_email')
     driverList = haha.objects.filter(email=email)
     driver = driverList.first()
@@ -31,41 +30,45 @@ def driver1(request,id1):
     if driver.status_flag == 1:
         hercar=car.objects.filter(driver_id=email).first()
         passen = hercar.max_passanger
-        kk.max_passanger = passen-kk.NumPassanger
-        print(passen)
+       # print(passen)
         flag = 0
         orderList=Ride.objects.filter(NumPassanger__lte=passen,status=0)
-        
+        confirmList = Ride.objects.filter(status=1)
+        completeList = Ride.objects.filter(status = 2)
     else:
-        print("not a driver")
         orderList = None
+        completeList = None
+        confirmList = None
         flag=1
 
          
-    return render(request,'users/driver.html',{'isDriver':flag,'orderList':orderList})   
+    return render(request,'users/driver.html',{'isDriver':flag,'orderList':orderList,'confirmList':confirmList,'completeList':completeList})   
 
 
-def driver(request):              
+def driver(request):
+       
+       
     email = request.session.get('user_email')
     driverList = haha.objects.filter(email=email)
     driver = driverList.first()
-    print(driver.email)
-#    print(driver.status_flag)
+    print(driver.status_flag)
     flag = driver.status_flag
-    print(flag)
-    if flag == '1':
+    if driver.status_flag == 1:
         hercar=car.objects.filter(driver_id=email).first()
         passen = hercar.max_passanger
         print(passen)
         flag = 0
         orderList=Ride.objects.filter(NumPassanger__lte=passen,status = 0)
+        confirmList = Ride.objects.filter(status=1)
+        completeList = Ride.objects.filter(status = 2)
     else:
-        print("not a driver")
         orderList = None
+        completeList = None
+        confirmList = None
         flag=1
 
          
-    return render(request,'users/driver.html',{'isDriver':flag,'orderList':orderList})   
+    return render(request,'users/driver.html',{'isDriver':flag,'orderList':orderList,'confirmList':confirmList,'completeList':completeList})   
 
         
 
@@ -157,7 +160,6 @@ def request(request):
             new_request.NumPassanger = num           
             new_request.CanShare = share
             new_request.owner_email = request.session.get('user_email')
-            new_request.max_passanger = 100
             #TODO: change to no/yes
             new_request.status = 0
             new_request.owner_id = request.session.get('user_id')
@@ -176,7 +178,8 @@ def request(request):
 
 
 def display_my_rides(request):
-#    return HttpResponse("a display pagexxxxxx")
+     requests = Ride.objects.filter(owner_email=request.session.get('user_email'))
+     #    return HttpResponse("a display pagexxxxxx")
      requests = Ride.objects.filter(owner_email=request.session.get('user_email'))
      print(requests)
      #context = {'requests':requests}
@@ -196,6 +199,10 @@ def display_my_rides(request):
      if Ride.objects.filter(id__in=share_res):
          sharers = Ride.objects.filter(id__in=share_res)
      context = {'requests':requests, 'drivers':drivers, 'sharer':sharers}
+
+          
+ 
+     context = {'requests':requests,'driverSet':driverSet}
      return render(request, "users/display.html", context=context)
 
 def logout(request):
@@ -211,7 +218,7 @@ def addCar(request):
     if form2.is_valid():
                 h = request.session.get('user_id',None) 
                 new_user = haha.objects.filter(id = h).first()
-                new_user.status_flag = 1
+                new_user.status_flag = '1'
                 new_user.save()
                 new_car = car.objects.create()
                 new_car.driver_id = new_user.email
@@ -272,7 +279,6 @@ def profile_edit(request):
             return render(request,'users/profile_edit.html',{'isDriver':1,'user_form':UserForm1,'car_form':CarForm1})
         else:
             return render(request,'users/profile_edit.html',{'isDriver':0,'user_form':UserForm1})
-        
         
 def rideDetail(request, request_id):
     response = "You're looking at the details of ride %s."

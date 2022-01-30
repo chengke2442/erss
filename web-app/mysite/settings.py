@@ -15,7 +15,7 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+STATIC_URL = '/static/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-y=82iyqt^$=gq572(+2cu5k&e^p+abq23&ha4@8pe2_jn^w$&8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['vcm-24569.vm.duke.edu','127.0.0.1']
+ALLOWED_HOSTS = ['vcm-24568.vm.duke.edu','127.0.0.1']
 
 
 # Application definition
@@ -81,7 +81,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'hw1',
         'USER': 'xw218',
-        'PASSWORD': 'WXTwxt20UNNC!',
+        'PASSWORD': '',
         'HOST': '127.0.0.1',
         'PORT': '5432',
 
@@ -89,7 +89,6 @@ DATABASES = {
 }
 
 
-LOGIN_URL = "/login/"
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -130,3 +129,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.office365.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'hw568ece@outlook.com'
+EMAIL_HOST_PASSWORD = 'ece568ece568'
