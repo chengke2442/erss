@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.shortcuts import render,redirect
 from django.contrib import messages
@@ -262,25 +263,38 @@ def rideDetail(request, request_id):
     request_res = Ride.objects.get(pk=request_id)
     print(request_res)
     owner = haha.objects.get(email=request_res.owner_email)
+    relations = Relation.objects.filter(r_request_id=request_id)
+#    print(relation)
     try:
-        relation = Relation.objects.get(r_request_id=request_id)
-        print(relation)
+        relation = relations.first()
         driver_email = relation.r_driver_email;
         print(driver_email)
         driver = haha.objects.get(email=driver_email)
-        print(driver.email)
-        vehilce = car.objects.get(driver_id=driver_email)
-        print(vehilce.plate_number)
+        vehilce = car.objects.get(driver_id=driver_email)   
     except:
-        driver=haha.objects.first()
-        vehilce = car()
-        #vehilce = car.objects.first()
-        #car.driver_id = new_user.email
-        #car.vehicle_type =  car1.cleaned_data.get('vehicle_type')
-        #car.plate_number =  0
-        #car.max_passanger =  0
-
-    return render(request, 'users/rideDetail.html', {'request_id':request_res, 'driver':driver, 'car':vehilce, 'owner':owner})
+        driver=None
+        vehilce = None
+        #print(vehilce.plate_number)
+    
+        #        print(share_emails)
+    wanted_sharers = set()
+    sharers = None
+    try:
+        sharers = Relation.objects.filter(r_request_id=request_id).values('r_sharer_email')
+    except:
+        sharers = None
+    #try:
+    #    for relation in relations:
+    #        print(relation.r_sharer_email)
+    #        wanted_sharers.add(haha.objects.filter(email=relation.r_sharer_email).first().id)
+    #    print(wanted_sharers)
+    #    sharers = haha.objects.filter(pk__in = wanted_sharers)
+    #except:
+    #     print("no shares found")
+    #     sharers = None
+    #sharers = haha.objects.filter(email__in = emails)  
+    
+    return render(request, 'users/rideDetail.html', {'request_id':request_res, 'driver':driver, 'car':vehilce, 'owner':owner, 'sharers':sharers})
  #   return HttpResponse(response % request_id)
 
 

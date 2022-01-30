@@ -96,11 +96,44 @@
    </ul>
 </div>
 
+{% if sharers %}
+<h3> Ride {{request_id.id}} Sharers Info</h3>
+<div>
+    <table>
+      <tr>
+        <th>Email</th>
+        <th># of passangers</th>
+      </tr>
+
+{% for sharer in sharers %}
+      <tr>
+	<td>{{sharer.r_sharer_email}}r</td>
+	<td>1</td>
+      </tr>
+      {% endfor %}
+      </table>
+{% else %}
+<h3> Nobody joins</h3>
+{% endif %}
+</div>
+
+
+
+
+
+
+
+
+
+
+
     <ul>
       <li><a href="/index/">BACK TO INDEX</a></li>
     </ul>
 
 
+
+    
 
 
 
